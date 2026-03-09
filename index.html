@@ -6,22 +6,12 @@
   <title>Course Design Toolkit — The Five Principles of Intentional Online Learning</title>
   <meta name="description" content="Transform your online course from a content repository into a genuine learning experience with this interactive design toolkit.">
   
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,500;8..60,600;8..60,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   
-  <!-- React -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
-  
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     
     body {
       font-family: "Source Serif 4", Georgia, serif;
@@ -29,1745 +19,816 @@
       min-height: 100vh;
     }
     
-    .principle-card {
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .principle-card:hover {
-      transform: translateY(-2px);
-    }
-    
-    .check-item {
-      transition: all 0.2s ease;
-    }
-    .check-item:hover {
-      background: rgba(0,0,0,0.02);
+    .header {
+      background: #1A1A1A;
+      color: #FDFCFB;
+      padding: 48px 32px;
+      position: relative;
+      overflow: hidden;
     }
     
-    .section-toggle {
-      transition: all 0.2s ease;
+    .header-bg {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(ellipse at 30% 20%, rgba(45,90,74,0.3) 0%, transparent 50%), 
+                  radial-gradient(ellipse at 70% 80%, rgba(74,74,122,0.2) 0%, transparent 50%);
+      pointer-events: none;
     }
-    .section-toggle:hover {
-      background: rgba(0,0,0,0.04);
+    
+    .header-content {
+      max-width: 900px;
+      margin: 0 auto;
+      position: relative;
     }
-
-    .progress-fill {
-      transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    .header-label {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(253,252,251,0.5);
+      margin-bottom: 16px;
     }
-
+    
+    .header h1 {
+      font-size: clamp(32px, 5vw, 48px);
+      font-weight: 300;
+      margin: 0 0 16px 0;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+    
+    .header h1 span { font-weight: 600; }
+    
+    .header p {
+      font-size: 18px;
+      color: rgba(253,252,251,0.7);
+      max-width: 600px;
+      line-height: 1.6;
+    }
+    
+    .mode-buttons {
+      margin-top: 32px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    
     .mode-btn {
+      padding: 12px 24px;
+      background: transparent;
+      color: rgba(253,252,251,0.7);
+      border: 1px solid rgba(253,252,251,0.3);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: inherit;
       transition: all 0.2s ease;
     }
-    .mode-btn:hover {
-      transform: translateY(-1px);
+    
+    .mode-btn:hover { transform: translateY(-1px); }
+    .mode-btn.active { background: #FDFCFB; color: #1A1A1A; }
+    
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 48px 32px;
     }
     
-    button {
+    .progress-box {
+      background: #fff;
+      border: 1px solid #E5E2DE;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 32px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      display: none;
+    }
+    
+    .progress-box.visible { display: block; }
+    
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    
+    .progress-header h3 {
+      margin: 0 0 4px 0;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    
+    .progress-header p {
+      margin: 0;
+      font-size: 14px;
+      color: #666;
+    }
+    
+    .progress-stats {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    
+    .progress-percent {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 24px;
+      font-weight: 500;
+    }
+    
+    .reset-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      background: transparent;
+      border: 1px solid #E5E2DE;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      color: #666;
       font-family: inherit;
     }
-
-    .icon {
-      display: inline-flex;
+    
+    .progress-bar {
+      height: 8px;
+      background: #F5F3F0;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #2D5A4A 0%, #4A7A6A 100%);
+      border-radius: 4px;
+      transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .principles { display: flex; flex-direction: column; gap: 16px; }
+    
+    .principle-card {
+      background: #fff;
+      border: 1px solid #E5E2DE;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .principle-card:hover { transform: translateY(-2px); }
+    .principle-card.active { border-color: var(--principle-color); background: var(--principle-light); }
+    
+    .principle-header {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 24px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      font-family: inherit;
+    }
+    
+    .principle-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
       align-items: center;
       justify-content: center;
+      flex-shrink: 0;
     }
-  </style>
-</head>
-<body>
-  <div id="root"></div>
-  
-  <script type="text/babel">
-    const { useState, useEffect } = React;
-
-    // Simple SVG Icon components
-    const Icons = {
-      BookOpen: ({ size = 24, color = "currentColor" }) => (
-        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-        </svg>
-      ),
-      Target: ({ size = 24, color = "currentColor" }) => (
-        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="12" cy="12" r="10"></circle>
-          <circle cx="12" cy="12" r="6"></circle>
-          <circle cx="12" cy="12" r="2"></circle>
-        </svg>
-      ),
-      Layers: ({ size = 24, color = "currentColor" }) => (
-        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-          <polyline points="2 17 12 22 22 17"></polyline>
-          <polyline points="2 12 12 17 22 12"></polyline>
-        </svg>
-      ),
-      Sparkles: ({ size = 24, color = "currentColor" }) => (
-        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path>
-          <path d="M5 3v4"></path>
-          <path d="M19 17v4"></path>
-          <path d="M3 5h4"></path>
-          <path d="M17 19h4"></path>
-        </svg>
-      ),
-      Clock: ({ size = 24, color = "currentColor" }) => (
-        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="12" cy="12" r="10"></circle>
-          <polyline points="12 6 12 12 16 14"></polyline>
-        </svg>
-      ),
-      ChevronRight: ({ size = 24, color = "currentColor", style = {} }) => (
-        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}>
-          <polyline points="9 18 15 12 9 6"></polyline>
-        </svg>
-      ),
-      Check: ({ size = 24, color = "currentColor", strokeWidth = 2 }) => (
-        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
-          <polyline points="20 6 9 17 4 12"></polyline>
-        </svg>
-      ),
-      RotateCcw: ({ size = 24, color = "currentColor" }) => (
-        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
-          <path d="M3 3v5h5"></path>
-        </svg>
-      ),
-    };
-
-    const principles = [
-      {
-        id: 'journey',
-        title: 'Design Learning Journeys',
-        subtitle: 'Not content collections',
-        icon: 'BookOpen',
-        color: '#2D5A4A',
-        lightColor: '#E8F0ED',
-        description: 'Online courses must guide learners through a purposeful progression, not simply present information.',
-        expandedContent: {
-          why: "Content alone doesn't create learning. Without intentional structure, learners face cognitive overload, lose motivation, and fail to build lasting understanding. A learning journey provides direction, momentum, and meaning.",
-          principles: [
-            'Start with transformation: What can learners DO after completing this course that they couldn\'t before?',
-            'Map the path: Identify prerequisite knowledge, key milestones, and the logical sequence of skill-building',
-            'Create narrative flow: Each module should feel like a chapter that builds on what came before',
-            'Design for the "aha" moments: Place revelations and breakthroughs intentionally throughout the journey'
-          ],
-          checklist: [
-            'I can articulate the transformation learners will experience',
-            'Each module has a clear purpose in the overall journey',
-            'Prerequisites are identified and addressed',
-            'The sequence follows a logical learning progression',
-            'Learners can see where they are and where they\'re going',
-            'The course has a satisfying conclusion that ties everything together'
-          ],
-          questions: [
-            'If someone asked a learner "What is this course about?", could they explain the journey?',
-            'Does the structure reveal itself progressively, or dump everything at once?',
-            'Would removing any module break the learning progression?'
-          ]
-        }
-      },
-      {
-        id: 'alignment',
-        title: 'Align Outcomes, Activities & Assessments',
-        subtitle: 'Explicit constructive alignment',
-        icon: 'Target',
-        color: '#8B4513',
-        lightColor: '#F5EDE4',
-        description: 'What learners should achieve, what they do, and how they prove mastery must form a coherent system.',
-        expandedContent: {
-          why: "Misalignment creates frustration and wasted effort. When assessments test things not taught, or activities don't relate to outcomes, learners lose trust and fail to develop the intended competencies.",
-          principles: [
-            'Write outcomes first: Use action verbs that describe observable, measurable behaviors',
-            'Design assessments second: Create tasks that directly demonstrate achievement of outcomes',
-            'Build activities third: Every learning activity should prepare learners for assessments',
-            'Check bidirectional alignment: Each activity → assessment → outcome should form a clear chain'
-          ],
-          checklist: [
-            'Learning outcomes use specific, measurable action verbs',
-            'Each outcome has at least one corresponding assessment',
-            'Assessments directly measure the stated outcomes (not tangentially related skills)',
-            'Learning activities provide practice for assessment tasks',
-            'No "orphan" activities exist that don\'t connect to outcomes',
-            'Learners can see the connection between activities and assessments'
-          ],
-          questions: [
-            'Could you defend why each assessment task measures what you claim?',
-            'Are you testing recall when you promised application?',
-            'Do activities give learners enough practice to succeed on assessments?'
-          ]
-        }
-      },
-      {
-        id: 'chunking',
-        title: 'Chunk for Independent Learning',
-        subtitle: 'Interactive, structured, digestible',
-        icon: 'Layers',
-        color: '#4A4A7A',
-        lightColor: '#EEEEF4',
-        description: 'Content must be broken into manageable pieces, made interactive, and structured for self-paced progression.',
-        expandedContent: {
-          why: "Online learners face distractions, time constraints, and no instructor to pace them. Without proper chunking and structure, they struggle to maintain focus, find re-entry points, and monitor their own progress.",
-          principles: [
-            'Apply the 10-minute rule: No single content piece should exceed 10 minutes without interaction',
-            'Create natural stopping points: Design modules that can be completed in one sitting (15-30 min)',
-            'Build in checkpoints: Provide ways for learners to confirm understanding before moving on',
-            'Layer complexity: Start simple, add nuance progressively within each chunk'
-          ],
-          checklist: [
-            'Videos are under 10 minutes (ideally 5-7 minutes)',
-            'Each module can be completed in a single session',
-            'Clear headings and navigation allow easy re-entry',
-            'Interactive elements appear every 3-5 minutes',
-            'Progress indicators show completion status',
-            'Content builds from simple to complex within chunks'
-          ],
-          questions: [
-            'If a learner is interrupted mid-module, can they easily find where to resume?',
-            'How long until a learner is asked to DO something, not just consume?',
-            'Would removing any chunk break the learning flow?'
-          ]
-        }
-      },
-      {
-        id: 'engagement',
-        title: 'Design Engagement Intentionally',
-        subtitle: "Don't assume participation",
-        icon: 'Sparkles',
-        color: '#7A3A4A',
-        lightColor: '#F4EAEC',
-        description: 'Engagement must be engineered into the course design, not hoped for as a byproduct of good content.',
-        expandedContent: {
-          why: "Unlike in-person learning, online courses compete with infinite distractions. Without deliberate engagement design, even excellent content fails to hold attention or motivate completion.",
-          principles: [
-            'Create stakes: Help learners understand why this matters to THEM, not just why it\'s important',
-            'Build in social proof: Show learners they\'re not alone (cohort features, forums, completion stats)',
-            'Use variable rewards: Mix predictable progress with unexpected delights',
-            'Design for commitment: Get small yeses early that lead to larger investment'
-          ],
-          checklist: [
-            'The course opening creates personal relevance within 60 seconds',
-            'Multiple engagement modes exist (visual, auditory, interactive, social)',
-            'Gamification elements (if used) support learning goals, not just completion',
-            'Discussion prompts require genuine thought, not simple recall',
-            'Feedback is timely, specific, and encouraging',
-            'Completion rewards feel meaningful, not arbitrary'
-          ],
-          questions: [
-            'What would make someone WANT to open this course instead of Netflix?',
-            'If engagement metrics dropped, where would you look first?',
-            'Are you engaging learners or just entertaining them?'
-          ]
-        }
-      },
-      {
-        id: 'time',
-        title: 'Account for Total Learning Time',
-        subtitle: 'Beyond watching and reading',
-        icon: 'Clock',
-        color: '#2A4A5A',
-        lightColor: '#E6EEF2',
-        description: 'True learning time includes thinking, processing, practicing, and applying—not just content consumption.',
-        expandedContent: {
-          why: "Courses that only count \"seat time\" dramatically underestimate real learning time. This leads to unrealistic expectations, learner burnout, and designs that don't allow for deep processing.",
-          principles: [
-            'Use the 3:1 ratio: For every hour of content, plan 3 hours of total learning time',
-            'Build in processing time: Schedule reflection activities after dense content',
-            'Account for practice: Skills require repeated application, not just exposure',
-            'Consider context switching: Online learners often study in fragmented time'
-          ],
-          checklist: [
-            'Total learning time is explicitly communicated to learners',
-            'Time estimates include activities, not just content length',
-            'Reflection activities have allocated time',
-            'Practice exercises account for multiple attempts',
-            'Module time estimates have been validated with real learners',
-            "The course doesn't assume uninterrupted study sessions"
-          ],
-          questions: [
-            'Have you timed yourself completing all activities as a naive learner would?',
-            'Does your time estimate include the thinking that happens after videos end?',
-            'Are deadlines realistic given total (not just content) time?'
-          ]
-        }
-      }
-    ];
-
-    function CourseDesignToolkit() {
-      const [activePrinciple, setActivePrinciple] = useState(null);
-      const [checkedItems, setCheckedItems] = useState({});
-      const [expandedSections, setExpandedSections] = useState({});
-      const [viewMode, setViewMode] = useState('explore');
-
-      // Load saved progress from localStorage
-      useEffect(() => {
-        try {
-          const saved = localStorage.getItem('courseDesignProgress');
-          if (saved) {
-            setCheckedItems(JSON.parse(saved));
-          }
-        } catch (e) {
-          console.log('Could not load saved progress');
-        }
-      }, []);
-
-      // Save progress to localStorage
-      useEffect(() => {
-        try {
-          localStorage.setItem('courseDesignProgress', JSON.stringify(checkedItems));
-        } catch (e) {
-          console.log('Could not save progress');
-        }
-      }, [checkedItems]);
-
-      const toggleCheck = (principleId, index) => {
-        const key = `${principleId}-${index}`;
-        setCheckedItems(prev => ({ ...prev, [key]: !prev[key] }));
-      };
-
-      const toggleSection = (section) => {
-        setExpandedSections(prev => ({ ...prev, [section]: !prev[section] }));
-      };
-
-      const getProgress = (principleId) => {
-        const principle = principles.find(p => p.id === principleId);
-        const total = principle.expandedContent.checklist.length;
-        const checked = principle.expandedContent.checklist.filter((_, i) => 
-          checkedItems[`${principleId}-${i}`]
-        ).length;
-        return { checked, total, percentage: Math.round((checked / total) * 100) };
-      };
-
-      const getTotalProgress = () => {
-        const allChecks = principles.flatMap(p => 
-          p.expandedContent.checklist.map((_, i) => checkedItems[`${p.id}-${i}`])
-        );
-        const checked = allChecks.filter(Boolean).length;
-        return { checked, total: allChecks.length, percentage: Math.round((checked / allChecks.length) * 100) };
-      };
-
-      const resetProgress = () => {
-        if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
-          setCheckedItems({});
-        }
-      };
-
-      const renderIcon = (iconName, props = {}) => {
-        const IconComponent = Icons[iconName];
-        return IconComponent ? <IconComponent {...props} /> : null;
-      };
-
-      return (
-        <div style={{ minHeight: '100vh' }}>
-          {/* Header */}
-          <header style={{
-            background: '#1A1A1A',
-            color: '#FDFCFB',
-            padding: '48px 32px',
-            position: 'relative',
-            overflow: 'hidden',
-          }}>
-            <div style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              background: 'radial-gradient(ellipse at 30% 20%, rgba(45,90,74,0.3) 0%, transparent 50%), radial-gradient(ellipse at 70% 80%, rgba(74,74,122,0.2) 0%, transparent 50%)',
-              pointerEvents: 'none',
-            }} />
-            
-            <div style={{ maxWidth: '900px', margin: '0 auto', position: 'relative' }}>
-              <div style={{
-                fontFamily: '"JetBrains Mono", monospace',
-                fontSize: '11px',
-                letterSpacing: '2px',
-                textTransform: 'uppercase',
-                color: 'rgba(253,252,251,0.5)',
-                marginBottom: '16px',
-              }}>
-                Course Design Framework
-              </div>
-              
-              <h1 style={{
-                fontSize: 'clamp(32px, 5vw, 48px)',
-                fontWeight: '300',
-                margin: '0 0 16px 0',
-                lineHeight: '1.2',
-                letterSpacing: '-0.02em',
-              }}>
-                The Five Principles of<br />
-                <span style={{ fontWeight: '600' }}>Intentional Online Learning</span>
-              </h1>
-              
-              <p style={{
-                fontSize: '18px',
-                color: 'rgba(253,252,251,0.7)',
-                maxWidth: '600px',
-                lineHeight: '1.6',
-                margin: 0,
-              }}>
-                Transform your online course from a content repository into a genuine learning experience. Explore each principle, audit your course design, and track your progress.
-              </p>
-
-              {/* Mode Toggle */}
-              <div style={{
-                marginTop: '32px',
-                display: 'flex',
-                gap: '12px',
-                flexWrap: 'wrap',
-              }}>
-                <button
-                  className="mode-btn"
-                  onClick={() => setViewMode('explore')}
-                  style={{
-                    padding: '12px 24px',
-                    background: viewMode === 'explore' ? '#FDFCFB' : 'transparent',
-                    color: viewMode === 'explore' ? '#1A1A1A' : 'rgba(253,252,251,0.7)',
-                    border: '1px solid rgba(253,252,251,0.3)',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    fontSize: '14px',
-                    fontWeight: '500',
-                  }}
-                >
-                  Explore Principles
-                </button>
-                <button
-                  className="mode-btn"
-                  onClick={() => setViewMode('audit')}
-                  style={{
-                    padding: '12px 24px',
-                    background: viewMode === 'audit' ? '#FDFCFB' : 'transparent',
-                    color: viewMode === 'audit' ? '#1A1A1A' : 'rgba(253,252,251,0.7)',
-                    border: '1px solid rgba(253,252,251,0.3)',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    fontSize: '14px',
-                    fontWeight: '500',
-                  }}
-                >
-                  Audit My Course
-                </button>
-              </div>
-            </div>
-          </header>
-
-          {/* Main Content */}
-          <main style={{ maxWidth: '900px', margin: '0 auto', padding: '48px 32px' }}>
-            
-            {/* Audit Mode Progress Bar */}
-            {viewMode === 'audit' && (
-              <div style={{
-                background: '#fff',
-                border: '1px solid #E5E2DE',
-                borderRadius: '12px',
-                padding: '24px',
-                marginBottom: '32px',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
-              }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '16px' }}>
-                  <div>
-                    <h3 style={{ margin: '0 0 4px 0', fontSize: '16px', fontWeight: '600' }}>
-                      Course Audit Progress
-                    </h3>
-                    <p style={{ margin: 0, fontSize: '14px', color: '#666' }}>
-                      {getTotalProgress().checked} of {getTotalProgress().total} criteria checked
-                    </p>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                    <span style={{
-                      fontFamily: '"JetBrains Mono", monospace',
-                      fontSize: '24px',
-                      fontWeight: '500',
-                      color: getTotalProgress().percentage === 100 ? '#2D5A4A' : '#1A1A1A',
-                    }}>
-                      {getTotalProgress().percentage}%
-                    </span>
-                    <button
-                      onClick={resetProgress}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '6px',
-                        padding: '8px 12px',
-                        background: 'transparent',
-                        border: '1px solid #E5E2DE',
-                        borderRadius: '6px',
-                        cursor: 'pointer',
-                        fontSize: '13px',
-                        color: '#666',
-                      }}
-                    >
-                      {renderIcon('RotateCcw', { size: 14 })} Reset
-                    </button>
-                  </div>
-                </div>
-                <div style={{
-                  height: '8px',
-                  background: '#F5F3F0',
-                  borderRadius: '4px',
-                  overflow: 'hidden',
-                }}>
-                  <div
-                    className="progress-fill"
-                    style={{
-                      height: '100%',
-                      width: `${getTotalProgress().percentage}%`,
-                      background: 'linear-gradient(90deg, #2D5A4A 0%, #4A7A6A 100%)',
-                      borderRadius: '4px',
-                    }}
-                  />
-                </div>
-              </div>
-            )}
-
-            {/* Principles List */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {principles.map((principle, index) => {
-                const isActive = activePrinciple === principle.id;
-                const progress = getProgress(principle.id);
-                
-                return (
-                  <div
-                    key={principle.id}
-                    className="principle-card"
-                    style={{
-                      background: isActive ? principle.lightColor : '#fff',
-                      border: `1px solid ${isActive ? principle.color : '#E5E2DE'}`,
-                      borderRadius: '12px',
-                      overflow: 'hidden',
-                      boxShadow: isActive 
-                        ? `0 4px 20px ${principle.color}20` 
-                        : '0 2px 8px rgba(0,0,0,0.04)',
-                    }}
-                  >
-                    {/* Principle Header */}
-                    <button
-                      onClick={() => setActivePrinciple(isActive ? null : principle.id)}
-                      style={{
-                        width: '100%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '16px',
-                        padding: '24px',
-                        background: 'transparent',
-                        border: 'none',
-                        cursor: 'pointer',
-                        textAlign: 'left',
-                      }}
-                    >
-                      <div style={{
-                        width: '48px',
-                        height: '48px',
-                        borderRadius: '12px',
-                        background: principle.color,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flexShrink: 0,
-                      }}>
-                        {renderIcon(principle.icon, { size: 24, color: '#fff' })}
-                      </div>
-                      
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{
-                          fontFamily: '"JetBrains Mono", monospace',
-                          fontSize: '11px',
-                          color: principle.color,
-                          marginBottom: '4px',
-                        }}>
-                          Principle {index + 1}
-                        </div>
-                        <h3 style={{
-                          margin: '0 0 4px 0',
-                          fontSize: '18px',
-                          fontWeight: '600',
-                          color: '#1A1A1A',
-                        }}>
-                          {principle.title}
-                        </h3>
-                        <p style={{
-                          margin: 0,
-                          fontSize: '14px',
-                          color: '#666',
-                        }}>
-                          {principle.subtitle}
-                        </p>
-                      </div>
-
-                      {viewMode === 'audit' && (
-                        <div style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '8px',
-                          padding: '6px 12px',
-                          background: progress.percentage === 100 ? '#2D5A4A' : '#F5F3F0',
-                          borderRadius: '20px',
-                          flexShrink: 0,
-                        }}>
-                          <span style={{
-                            fontFamily: '"JetBrains Mono", monospace',
-                            fontSize: '12px',
-                            fontWeight: '500',
-                            color: progress.percentage === 100 ? '#fff' : '#1A1A1A',
-                          }}>
-                            {progress.checked}/{progress.total}
-                          </span>
-                        </div>
-                      )}
-
-                      <span style={{
-                        transform: isActive ? 'rotate(90deg)' : 'none',
-                        transition: 'transform 0.2s ease',
-                        display: 'flex',
-                      }}>
-                        {renderIcon('ChevronRight', { size: 20, color: '#999' })}
-                      </span>
-                    </button>
-
-                    {/* Expanded Content */}
-                    {isActive && (
-                      <div style={{ padding: '0 24px 24px' }}>
-                        <p style={{
-                          fontSize: '16px',
-                          lineHeight: '1.7',
-                          color: '#444',
-                          margin: '0 0 24px 0',
-                          paddingLeft: '64px',
-                        }}>
-                          {principle.description}
-                        </p>
-
-                        {/* Why This Matters */}
-                        <div
-                          className="section-toggle"
-                          style={{
-                            background: '#fff',
-                            borderRadius: '8px',
-                            marginBottom: '12px',
-                            overflow: 'hidden',
-                          }}
-                        >
-                          <button
-                            onClick={() => toggleSection(`${principle.id}-why`)}
-                            style={{
-                              width: '100%',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'space-between',
-                              padding: '16px 20px',
-                              background: 'transparent',
-                              border: 'none',
-                              cursor: 'pointer',
-                            }}
-                          >
-                            <span style={{ fontWeight: '600', fontSize: '15px' }}>
-                              Why This Matters
-                            </span>
-                            <span style={{
-                              transform: expandedSections[`${principle.id}-why`] ? 'rotate(90deg)' : 'none',
-                              transition: 'transform 0.2s ease',
-                              display: 'flex',
-                            }}>
-                              {renderIcon('ChevronRight', { size: 18, color: '#999' })}
-                            </span>
-                          </button>
-                          {expandedSections[`${principle.id}-why`] && (
-                            <div style={{ padding: '0 20px 16px' }}>
-                              <p style={{ margin: 0, lineHeight: '1.7', color: '#555' }}>
-                                {principle.expandedContent.why}
-                              </p>
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Key Principles */}
-                        <div
-                          className="section-toggle"
-                          style={{
-                            background: '#fff',
-                            borderRadius: '8px',
-                            marginBottom: '12px',
-                            overflow: 'hidden',
-                          }}
-                        >
-                          <button
-                            onClick={() => toggleSection(`${principle.id}-principles`)}
-                            style={{
-                              width: '100%',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'space-between',
-                              padding: '16px 20px',
-                              background: 'transparent',
-                              border: 'none',
-                              cursor: 'pointer',
-                            }}
-                          >
-                            <span style={{ fontWeight: '600', fontSize: '15px' }}>
-                              Key Practices
-                            </span>
-                            <span style={{
-                              transform: expandedSections[`${principle.id}-principles`] ? 'rotate(90deg)' : 'none',
-                              transition: 'transform 0.2s ease',
-                              display: 'flex',
-                            }}>
-                              {renderIcon('ChevronRight', { size: 18, color: '#999' })}
-                            </span>
-                          </button>
-                          {expandedSections[`${principle.id}-principles`] && (
-                            <div style={{ padding: '0 20px 16px' }}>
-                              <ul style={{ margin: 0, paddingLeft: '20px', lineHeight: '1.8' }}>
-                                {principle.expandedContent.principles.map((item, i) => (
-                                  <li key={i} style={{ color: '#555', marginBottom: '8px' }}>
-                                    {item}
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Design Checklist */}
-                        <div
-                          style={{
-                            background: '#fff',
-                            borderRadius: '8px',
-                            marginBottom: '12px',
-                            overflow: 'hidden',
-                            border: viewMode === 'audit' ? `2px solid ${principle.color}40` : 'none',
-                          }}
-                        >
-                          <div style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            padding: '16px 20px',
-                            borderBottom: '1px solid #F0EEEB',
-                          }}>
-                            <span style={{ fontWeight: '600', fontSize: '15px' }}>
-                              Design Checklist
-                            </span>
-                            {viewMode === 'audit' && (
-                              <span style={{
-                                fontFamily: '"JetBrains Mono", monospace',
-                                fontSize: '12px',
-                                color: principle.color,
-                              }}>
-                                {progress.checked} of {progress.total} complete
-                              </span>
-                            )}
-                          </div>
-                          <div style={{ padding: '8px 0' }}>
-                            {principle.expandedContent.checklist.map((item, i) => {
-                              const isChecked = checkedItems[`${principle.id}-${i}`];
-                              return (
-                                <button
-                                  key={i}
-                                  className="check-item"
-                                  onClick={() => viewMode === 'audit' && toggleCheck(principle.id, i)}
-                                  style={{
-                                    width: '100%',
-                                    display: 'flex',
-                                    alignItems: 'flex-start',
-                                    gap: '12px',
-                                    padding: '12px 20px',
-                                    background: 'transparent',
-                                    border: 'none',
-                                    cursor: viewMode === 'audit' ? 'pointer' : 'default',
-                                    textAlign: 'left',
-                                  }}
-                                >
-                                  <div style={{
-                                    width: '22px',
-                                    height: '22px',
-                                    borderRadius: '6px',
-                                    border: isChecked ? 'none' : '2px solid #D0CCC6',
-                                    background: isChecked ? principle.color : 'transparent',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    flexShrink: 0,
-                                    marginTop: '1px',
-                                    transition: 'all 0.15s ease',
-                                  }}>
-                                    {isChecked && renderIcon('Check', { size: 14, color: '#fff', strokeWidth: 3 })}
-                                  </div>
-                                  <span style={{
-                                    fontSize: '14px',
-                                    lineHeight: '1.5',
-                                    color: isChecked ? '#888' : '#444',
-                                    textDecoration: isChecked ? 'line-through' : 'none',
-                                  }}>
-                                    {item}
-                                  </span>
-                                </button>
-                              );
-                            })}
-                          </div>
-                        </div>
-
-                        {/* Reflection Questions */}
-                        <div
-                          className="section-toggle"
-                          style={{
-                            background: '#fff',
-                            borderRadius: '8px',
-                            overflow: 'hidden',
-                          }}
-                        >
-                          <button
-                            onClick={() => toggleSection(`${principle.id}-questions`)}
-                            style={{
-                              width: '100%',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'space-between',
-                              padding: '16px 20px',
-                              background: 'transparent',
-                              border: 'none',
-                              cursor: 'pointer',
-                            }}
-                          >
-                            <span style={{ fontWeight: '600', fontSize: '15px' }}>
-                              Reflection Questions
-                            </span>
-                            <span style={{
-                              transform: expandedSections[`${principle.id}-questions`] ? 'rotate(90deg)' : 'none',
-                              transition: 'transform 0.2s ease',
-                              display: 'flex',
-                            }}>
-                              {renderIcon('ChevronRight', { size: 18, color: '#999' })}
-                            </span>
-                          </button>
-                          {expandedSections[`${principle.id}-questions`] && (
-                            <div style={{ padding: '0 20px 16px' }}>
-                              {principle.expandedContent.questions.map((q, i) => (
-                                <div
-                                  key={i}
-                                  style={{
-                                    display: 'flex',
-                                    gap: '12px',
-                                    padding: '12px 0',
-                                    borderBottom: i < principle.expandedContent.questions.length - 1 ? '1px solid #F0EEEB' : 'none',
-                                  }}
-                                >
-                                  <span style={{
-                                    color: principle.color,
-                                    fontWeight: '600',
-                                    fontSize: '14px',
-                                  }}>
-                                    Q{i + 1}
-                                  </span>
-                                  <span style={{
-                                    fontSize: '14px',
-                                    lineHeight: '1.6',
-                                    color: '#444',
-                                    fontStyle: 'italic',
-                                  }}>
-                                    {q}
-                                  </span>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Footer */}
-            <footer style={{
-              marginTop: '64px',
-              padding: '32px',
-              background: '#1A1A1A',
-              borderRadius: '12px',
-              color: '#FDFCFB',
-              textAlign: 'center',
-            }}>
-              <p style={{
-                margin: '0 0 8px 0',
-                fontSize: '14px',
-                opacity: 0.7,
-              }}>
-                Based on evidence-based instructional design principles
-              </p>
-              <p style={{
-                margin: 0,
-                fontSize: '12px',
-                opacity: 0.5,
-                fontFamily: '"JetBrains Mono", monospace',
-              }}>
-                Your progress is saved automatically in your browser
-              </p>
-            </footer>
-          </main>
-        </div>
-      );
+    
+    .principle-icon svg {
+      width: 24px;
+      height: 24px;
+      stroke: #fff;
+      stroke-width: 2;
+      fill: none;
     }
-
-    // Render the app
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<CourseDesignToolkit />);
-  </script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Course Design Toolkit — The Five Principles of Intentional Online Learning</title>
-  <meta name="description" content="Transform your online course from a content repository into a genuine learning experience with this interactive design toolkit.">
-  
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,500;8..60,600;8..60,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  
-  <!-- React & Babel for client-side rendering -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
-  
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  
-  <style>
-    * {
-      box-sizing: border-box;
+    
+    .principle-info { flex: 1; min-width: 0; }
+    
+    .principle-num {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px;
+      margin-bottom: 4px;
+    }
+    
+    .principle-title {
+      margin: 0 0 4px 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: #1A1A1A;
+    }
+    
+    .principle-subtitle {
       margin: 0;
-      padding: 0;
+      font-size: 14px;
+      color: #666;
     }
     
-    body {
-      font-family: "Source Serif 4", Georgia, serif;
-      background: linear-gradient(180deg, #FDFCFB 0%, #F5F3F0 100%);
-      min-height: 100vh;
+    .principle-progress {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      background: #F5F3F0;
+      border-radius: 20px;
+      flex-shrink: 0;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 12px;
+      font-weight: 500;
     }
     
-    .principle-card {
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .principle-card:hover {
-      transform: translateY(-2px);
+    .audit-mode .principle-progress { display: flex; }
+    .principle-progress.complete { background: #2D5A4A; color: #fff; }
+    
+    .chevron {
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
     }
     
-    .check-item {
-      transition: all 0.2s ease;
-    }
-    .check-item:hover {
-      background: rgba(0,0,0,0.02);
+    .principle-card.active .chevron { transform: rotate(90deg); }
+    
+    .principle-content {
+      display: none;
+      padding: 0 24px 24px;
     }
     
-    .section-toggle {
-      transition: all 0.2s ease;
-    }
-    .section-toggle:hover {
-      background: rgba(0,0,0,0.04);
-    }
-
-    .progress-fill {
-      transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .mode-btn {
-      transition: all 0.2s ease;
-    }
-    .mode-btn:hover {
-      transform: translateY(-1px);
+    .principle-card.active .principle-content { display: block; }
+    
+    .principle-desc {
+      font-size: 16px;
+      line-height: 1.7;
+      color: #444;
+      margin: 0 0 24px 0;
+      padding-left: 64px;
     }
     
-    button {
+    .section {
+      background: #fff;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+    
+    .section-header {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
       font-family: inherit;
     }
+    
+    .section-header span { font-weight: 600; font-size: 15px; }
+    
+    .section-header .chevron-small {
+      transition: transform 0.2s ease;
+    }
+    
+    .section.open .section-header .chevron-small { transform: rotate(90deg); }
+    
+    .section-content {
+      display: none;
+      padding: 0 20px 16px;
+    }
+    
+    .section.open .section-content { display: block; }
+    
+    .section-content p {
+      margin: 0;
+      line-height: 1.7;
+      color: #555;
+    }
+    
+    .section-content ul {
+      margin: 0;
+      padding-left: 20px;
+      line-height: 1.8;
+    }
+    
+    .section-content li {
+      color: #555;
+      margin-bottom: 8px;
+    }
+    
+    .checklist-section {
+      background: #fff;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+    
+    .audit-mode .checklist-section { border: 2px solid var(--principle-color-light); }
+    
+    .checklist-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid #F0EEEB;
+    }
+    
+    .checklist-header span { font-weight: 600; font-size: 15px; }
+    
+    .checklist-count {
+      display: none;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 12px;
+    }
+    
+    .audit-mode .checklist-count { display: block; }
+    
+    .checklist-items { padding: 8px 0; }
+    
+    .check-item {
+      width: 100%;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 20px;
+      background: transparent;
+      border: none;
+      cursor: default;
+      text-align: left;
+      font-family: inherit;
+      transition: background 0.2s ease;
+    }
+    
+    .audit-mode .check-item { cursor: pointer; }
+    .check-item:hover { background: rgba(0,0,0,0.02); }
+    
+    .check-box {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      border: 2px solid #D0CCC6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+      transition: all 0.15s ease;
+    }
+    
+    .check-item.checked .check-box {
+      border: none;
+      background: var(--principle-color);
+    }
+    
+    .check-box svg {
+      display: none;
+      width: 14px;
+      height: 14px;
+      stroke: #fff;
+      stroke-width: 3;
+    }
+    
+    .check-item.checked .check-box svg { display: block; }
+    
+    .check-item span {
+      font-size: 14px;
+      line-height: 1.5;
+      color: #444;
+    }
+    
+    .check-item.checked span {
+      color: #888;
+      text-decoration: line-through;
+    }
+    
+    .question {
+      display: flex;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid #F0EEEB;
+    }
+    
+    .question:last-child { border-bottom: none; }
+    
+    .question-num {
+      font-weight: 600;
+      font-size: 14px;
+    }
+    
+    .question-text {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #444;
+      font-style: italic;
+    }
+    
+    footer {
+      margin-top: 64px;
+      padding: 32px;
+      background: #1A1A1A;
+      border-radius: 12px;
+      color: #FDFCFB;
+      text-align: center;
+    }
+    
+    footer p {
+      margin: 0 0 8px 0;
+      font-size: 14px;
+      opacity: 0.7;
+    }
+    
+    footer p:last-child {
+      margin: 0;
+      font-size: 12px;
+      opacity: 0.5;
+      font-family: "JetBrains Mono", monospace;
+    }
   </style>
 </head>
 <body>
-  <div id="root"></div>
-  
-  <script type="text/babel">
-    const { useState, useEffect } = React;
+  <header class="header">
+    <div class="header-bg"></div>
+    <div class="header-content">
+      <div class="header-label">Course Design Framework</div>
+      <h1>The Five Principles of<br><span>Intentional Online Learning</span></h1>
+      <p>Transform your online course from a content repository into a genuine learning experience. Explore each principle, audit your course design, and track your progress.</p>
+      <div class="mode-buttons">
+        <button class="mode-btn active" data-mode="explore">Explore Principles</button>
+        <button class="mode-btn" data-mode="audit">Audit My Course</button>
+      </div>
+    </div>
+  </header>
 
-    // Icon components using Lucide
-    const Icon = ({ name, size = 24, color = "currentColor", strokeWidth = 2 }) => {
-      const ref = React.useRef(null);
-      
-      useEffect(() => {
-        if (ref.current && lucide && lucide[name]) {
-          ref.current.innerHTML = '';
-          const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-          svg.setAttribute('width', size);
-          svg.setAttribute('height', size);
-          svg.setAttribute('viewBox', '0 0 24 24');
-          svg.setAttribute('fill', 'none');
-          svg.setAttribute('stroke', color);
-          svg.setAttribute('stroke-width', strokeWidth);
-          svg.setAttribute('stroke-linecap', 'round');
-          svg.setAttribute('stroke-linejoin', 'round');
-          svg.innerHTML = lucide[name][2].map(([tag, attrs]) => {
-            const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
-            Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
-            return el.outerHTML;
-          }).join('');
-          ref.current.appendChild(svg);
-        }
-      }, [name, size, color, strokeWidth]);
-      
-      return <span ref={ref} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }} />;
-    };
+  <main>
+    <div class="progress-box" id="progressBox">
+      <div class="progress-header">
+        <div>
+          <h3>Course Audit Progress</h3>
+          <p><span id="checkedCount">0</span> of <span id="totalCount">30</span> criteria checked</p>
+        </div>
+        <div class="progress-stats">
+          <span class="progress-percent" id="progressPercent">0%</span>
+          <button class="reset-btn" id="resetBtn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+              <path d="M3 3v5h5"></path>
+            </svg>
+            Reset
+          </button>
+        </div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+      </div>
+    </div>
 
-    const principles = [
+    <div class="principles" id="principles"></div>
+
+    <footer>
+      <p>Based on evidence-based instructional design principles</p>
+      <p>Your progress is saved automatically in your browser</p>
+    </footer>
+  </main>
+
+  <script>
+    const principlesData = [
       {
         id: 'journey',
         title: 'Design Learning Journeys',
         subtitle: 'Not content collections',
-        icon: 'BookOpen',
         color: '#2D5A4A',
         lightColor: '#E8F0ED',
+        icon: '<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>',
         description: 'Online courses must guide learners through a purposeful progression, not simply present information.',
-        expandedContent: {
-          why: "Content alone doesn't create learning. Without intentional structure, learners face cognitive overload, lose motivation, and fail to build lasting understanding. A learning journey provides direction, momentum, and meaning.",
-          principles: [
-            'Start with transformation: What can learners DO after completing this course that they couldn\'t before?',
-            'Map the path: Identify prerequisite knowledge, key milestones, and the logical sequence of skill-building',
-            'Create narrative flow: Each module should feel like a chapter that builds on what came before',
-            'Design for the "aha" moments: Place revelations and breakthroughs intentionally throughout the journey'
-          ],
-          checklist: [
-            'I can articulate the transformation learners will experience',
-            'Each module has a clear purpose in the overall journey',
-            'Prerequisites are identified and addressed',
-            'The sequence follows a logical learning progression',
-            'Learners can see where they are and where they\'re going',
-            'The course has a satisfying conclusion that ties everything together'
-          ],
-          questions: [
-            'If someone asked a learner "What is this course about?", could they explain the journey?',
-            'Does the structure reveal itself progressively, or dump everything at once?',
-            'Would removing any module break the learning progression?'
-          ]
-        }
+        why: "Content alone doesn't create learning. Without intentional structure, learners face cognitive overload, lose motivation, and fail to build lasting understanding. A learning journey provides direction, momentum, and meaning.",
+        practices: [
+          "Start with transformation: What can learners DO after completing this course that they couldn't before?",
+          'Map the path: Identify prerequisite knowledge, key milestones, and the logical sequence of skill-building',
+          'Create narrative flow: Each module should feel like a chapter that builds on what came before',
+          'Design for the "aha" moments: Place revelations and breakthroughs intentionally throughout the journey'
+        ],
+        checklist: [
+          'I can articulate the transformation learners will experience',
+          'Each module has a clear purpose in the overall journey',
+          'Prerequisites are identified and addressed',
+          'The sequence follows a logical learning progression',
+          "Learners can see where they are and where they're going",
+          'The course has a satisfying conclusion that ties everything together'
+        ],
+        questions: [
+          'If someone asked a learner "What is this course about?", could they explain the journey?',
+          'Does the structure reveal itself progressively, or dump everything at once?',
+          'Would removing any module break the learning progression?'
+        ]
       },
       {
         id: 'alignment',
         title: 'Align Outcomes, Activities & Assessments',
         subtitle: 'Explicit constructive alignment',
-        icon: 'Target',
         color: '#8B4513',
         lightColor: '#F5EDE4',
+        icon: '<circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle>',
         description: 'What learners should achieve, what they do, and how they prove mastery must form a coherent system.',
-        expandedContent: {
-          why: "Misalignment creates frustration and wasted effort. When assessments test things not taught, or activities don't relate to outcomes, learners lose trust and fail to develop the intended competencies.",
-          principles: [
-            'Write outcomes first: Use action verbs that describe observable, measurable behaviors',
-            'Design assessments second: Create tasks that directly demonstrate achievement of outcomes',
-            'Build activities third: Every learning activity should prepare learners for assessments',
-            'Check bidirectional alignment: Each activity → assessment → outcome should form a clear chain'
-          ],
-          checklist: [
-            'Learning outcomes use specific, measurable action verbs',
-            'Each outcome has at least one corresponding assessment',
-            'Assessments directly measure the stated outcomes (not tangentially related skills)',
-            'Learning activities provide practice for assessment tasks',
-            'No "orphan" activities exist that don\'t connect to outcomes',
-            'Learners can see the connection between activities and assessments'
-          ],
-          questions: [
-            'Could you defend why each assessment task measures what you claim?',
-            'Are you testing recall when you promised application?',
-            'Do activities give learners enough practice to succeed on assessments?'
-          ]
-        }
+        why: "Misalignment creates frustration and wasted effort. When assessments test things not taught, or activities don't relate to outcomes, learners lose trust and fail to develop the intended competencies.",
+        practices: [
+          'Write outcomes first: Use action verbs that describe observable, measurable behaviors',
+          'Design assessments second: Create tasks that directly demonstrate achievement of outcomes',
+          'Build activities third: Every learning activity should prepare learners for assessments',
+          'Check bidirectional alignment: Each activity → assessment → outcome should form a clear chain'
+        ],
+        checklist: [
+          'Learning outcomes use specific, measurable action verbs',
+          'Each outcome has at least one corresponding assessment',
+          'Assessments directly measure the stated outcomes (not tangentially related skills)',
+          'Learning activities provide practice for assessment tasks',
+          "No \"orphan\" activities exist that don't connect to outcomes",
+          'Learners can see the connection between activities and assessments'
+        ],
+        questions: [
+          'Could you defend why each assessment task measures what you claim?',
+          'Are you testing recall when you promised application?',
+          'Do activities give learners enough practice to succeed on assessments?'
+        ]
       },
       {
         id: 'chunking',
         title: 'Chunk for Independent Learning',
         subtitle: 'Interactive, structured, digestible',
-        icon: 'Layers',
         color: '#4A4A7A',
         lightColor: '#EEEEF4',
+        icon: '<polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline>',
         description: 'Content must be broken into manageable pieces, made interactive, and structured for self-paced progression.',
-        expandedContent: {
-          why: "Online learners face distractions, time constraints, and no instructor to pace them. Without proper chunking and structure, they struggle to maintain focus, find re-entry points, and monitor their own progress.",
-          principles: [
-            'Apply the 10-minute rule: No single content piece should exceed 10 minutes without interaction',
-            'Create natural stopping points: Design modules that can be completed in one sitting (15-30 min)',
-            'Build in checkpoints: Provide ways for learners to confirm understanding before moving on',
-            'Layer complexity: Start simple, add nuance progressively within each chunk'
-          ],
-          checklist: [
-            'Videos are under 10 minutes (ideally 5-7 minutes)',
-            'Each module can be completed in a single session',
-            'Clear headings and navigation allow easy re-entry',
-            'Interactive elements appear every 3-5 minutes',
-            'Progress indicators show completion status',
-            'Content builds from simple to complex within chunks'
-          ],
-          questions: [
-            'If a learner is interrupted mid-module, can they easily find where to resume?',
-            'How long until a learner is asked to DO something, not just consume?',
-            'Would removing any chunk break the learning flow?'
-          ]
-        }
+        why: "Online learners face distractions, time constraints, and no instructor to pace them. Without proper chunking and structure, they struggle to maintain focus, find re-entry points, and monitor their own progress.",
+        practices: [
+          'Apply the 10-minute rule: No single content piece should exceed 10 minutes without interaction',
+          'Create natural stopping points: Design modules that can be completed in one sitting (15-30 min)',
+          'Build in checkpoints: Provide ways for learners to confirm understanding before moving on',
+          'Layer complexity: Start simple, add nuance progressively within each chunk'
+        ],
+        checklist: [
+          'Videos are under 10 minutes (ideally 5-7 minutes)',
+          'Each module can be completed in a single session',
+          'Clear headings and navigation allow easy re-entry',
+          'Interactive elements appear every 3-5 minutes',
+          'Progress indicators show completion status',
+          'Content builds from simple to complex within chunks'
+        ],
+        questions: [
+          'If a learner is interrupted mid-module, can they easily find where to resume?',
+          'How long until a learner is asked to DO something, not just consume?',
+          'Would removing any chunk break the learning flow?'
+        ]
       },
       {
         id: 'engagement',
         title: 'Design Engagement Intentionally',
         subtitle: "Don't assume participation",
-        icon: 'Sparkles',
         color: '#7A3A4A',
         lightColor: '#F4EAEC',
+        icon: '<path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path><path d="M5 3v4"></path><path d="M19 17v4"></path><path d="M3 5h4"></path><path d="M17 19h4"></path>',
         description: 'Engagement must be engineered into the course design, not hoped for as a byproduct of good content.',
-        expandedContent: {
-          why: "Unlike in-person learning, online courses compete with infinite distractions. Without deliberate engagement design, even excellent content fails to hold attention or motivate completion.",
-          principles: [
-            'Create stakes: Help learners understand why this matters to THEM, not just why it\'s important',
-            'Build in social proof: Show learners they\'re not alone (cohort features, forums, completion stats)',
-            'Use variable rewards: Mix predictable progress with unexpected delights',
-            'Design for commitment: Get small yeses early that lead to larger investment'
-          ],
-          checklist: [
-            'The course opening creates personal relevance within 60 seconds',
-            'Multiple engagement modes exist (visual, auditory, interactive, social)',
-            'Gamification elements (if used) support learning goals, not just completion',
-            'Discussion prompts require genuine thought, not simple recall',
-            'Feedback is timely, specific, and encouraging',
-            'Completion rewards feel meaningful, not arbitrary'
-          ],
-          questions: [
-            'What would make someone WANT to open this course instead of Netflix?',
-            'If engagement metrics dropped, where would you look first?',
-            'Are you engaging learners or just entertaining them?'
-          ]
-        }
+        why: "Unlike in-person learning, online courses compete with infinite distractions. Without deliberate engagement design, even excellent content fails to hold attention or motivate completion.",
+        practices: [
+          'Create stakes: Help learners understand why this matters to THEM, not just why it\'s important',
+          "Build in social proof: Show learners they're not alone (cohort features, forums, completion stats)",
+          'Use variable rewards: Mix predictable progress with unexpected delights',
+          'Design for commitment: Get small yeses early that lead to larger investment'
+        ],
+        checklist: [
+          'The course opening creates personal relevance within 60 seconds',
+          'Multiple engagement modes exist (visual, auditory, interactive, social)',
+          'Gamification elements (if used) support learning goals, not just completion',
+          'Discussion prompts require genuine thought, not simple recall',
+          'Feedback is timely, specific, and encouraging',
+          'Completion rewards feel meaningful, not arbitrary'
+        ],
+        questions: [
+          'What would make someone WANT to open this course instead of Netflix?',
+          'If engagement metrics dropped, where would you look first?',
+          'Are you engaging learners or just entertaining them?'
+        ]
       },
       {
         id: 'time',
         title: 'Account for Total Learning Time',
         subtitle: 'Beyond watching and reading',
-        icon: 'Clock',
         color: '#2A4A5A',
         lightColor: '#E6EEF2',
+        icon: '<circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>',
         description: 'True learning time includes thinking, processing, practicing, and applying—not just content consumption.',
-        expandedContent: {
-          why: "Courses that only count \"seat time\" dramatically underestimate real learning time. This leads to unrealistic expectations, learner burnout, and designs that don't allow for deep processing.",
-          principles: [
-            'Use the 3:1 ratio: For every hour of content, plan 3 hours of total learning time',
-            'Build in processing time: Schedule reflection activities after dense content',
-            'Account for practice: Skills require repeated application, not just exposure',
-            'Consider context switching: Online learners often study in fragmented time'
-          ],
-          checklist: [
-            'Total learning time is explicitly communicated to learners',
-            'Time estimates include activities, not just content length',
-            'Reflection activities have allocated time',
-            'Practice exercises account for multiple attempts',
-            'Module time estimates have been validated with real learners',
-            "The course doesn't assume uninterrupted study sessions"
-          ],
-          questions: [
-            'Have you timed yourself completing all activities as a naive learner would?',
-            'Does your time estimate include the thinking that happens after videos end?',
-            'Are deadlines realistic given total (not just content) time?'
-          ]
-        }
+        why: "Courses that only count \"seat time\" dramatically underestimate real learning time. This leads to unrealistic expectations, learner burnout, and designs that don't allow for deep processing.",
+        practices: [
+          'Use the 3:1 ratio: For every hour of content, plan 3 hours of total learning time',
+          'Build in processing time: Schedule reflection activities after dense content',
+          'Account for practice: Skills require repeated application, not just exposure',
+          'Consider context switching: Online learners often study in fragmented time'
+        ],
+        checklist: [
+          'Total learning time is explicitly communicated to learners',
+          'Time estimates include activities, not just content length',
+          'Reflection activities have allocated time',
+          'Practice exercises account for multiple attempts',
+          'Module time estimates have been validated with real learners',
+          "The course doesn't assume uninterrupted study sessions"
+        ],
+        questions: [
+          'Have you timed yourself completing all activities as a naive learner would?',
+          'Does your time estimate include the thinking that happens after videos end?',
+          'Are deadlines realistic given total (not just content) time?'
+        ]
       }
     ];
 
-    function CourseDesignToolkit() {
-      const [activePrinciple, setActivePrinciple] = useState(null);
-      const [checkedItems, setCheckedItems] = useState({});
-      const [expandedSections, setExpandedSections] = useState({});
-      const [viewMode, setViewMode] = useState('explore');
+    let checkedItems = {};
+    let currentMode = 'explore';
+    let activePrinciple = null;
 
-      // Load saved progress from localStorage
-      useEffect(() => {
-        const saved = localStorage.getItem('courseDesignProgress');
-        if (saved) {
-          try {
-            setCheckedItems(JSON.parse(saved));
-          } catch (e) {
-            console.log('Could not load saved progress');
-          }
-        }
-      }, []);
+    // Load saved progress
+    try {
+      const saved = localStorage.getItem('courseDesignProgress');
+      if (saved) checkedItems = JSON.parse(saved);
+    } catch (e) {}
 
-      // Save progress to localStorage
-      useEffect(() => {
+    function saveProgress() {
+      try {
         localStorage.setItem('courseDesignProgress', JSON.stringify(checkedItems));
-      }, [checkedItems]);
-
-      const toggleCheck = (principleId, index) => {
-        const key = `${principleId}-${index}`;
-        setCheckedItems(prev => ({ ...prev, [key]: !prev[key] }));
-      };
-
-      const toggleSection = (section) => {
-        setExpandedSections(prev => ({ ...prev, [section]: !prev[section] }));
-      };
-
-      const getProgress = (principleId) => {
-        const principle = principles.find(p => p.id === principleId);
-        const total = principle.expandedContent.checklist.length;
-        const checked = principle.expandedContent.checklist.filter((_, i) => 
-          checkedItems[`${principleId}-${i}`]
-        ).length;
-        return { checked, total, percentage: Math.round((checked / total) * 100) };
-      };
-
-      const getTotalProgress = () => {
-        const allChecks = principles.flatMap(p => 
-          p.expandedContent.checklist.map((_, i) => checkedItems[`${p.id}-${i}`])
-        );
-        const checked = allChecks.filter(Boolean).length;
-        return { checked, total: allChecks.length, percentage: Math.round((checked / allChecks.length) * 100) };
-      };
-
-      const resetProgress = () => {
-        if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
-          setCheckedItems({});
-        }
-      };
-
-      return (
-        <div style={{ minHeight: '100vh' }}>
-          {/* Header */}
-          <header style={{
-            background: '#1A1A1A',
-            color: '#FDFCFB',
-            padding: '48px 32px',
-            position: 'relative',
-            overflow: 'hidden',
-          }}>
-            <div style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              background: 'radial-gradient(ellipse at 30% 20%, rgba(45,90,74,0.3) 0%, transparent 50%), radial-gradient(ellipse at 70% 80%, rgba(74,74,122,0.2) 0%, transparent 50%)',
-              pointerEvents: 'none',
-            }} />
-            
-            <div style={{ maxWidth: '900px', margin: '0 auto', position: 'relative' }}>
-              <div style={{
-                fontFamily: '"JetBrains Mono", monospace',
-                fontSize: '11px',
-                letterSpacing: '2px',
-                textTransform: 'uppercase',
-                color: 'rgba(253,252,251,0.5)',
-                marginBottom: '16px',
-              }}>
-                Course Design Framework
-              </div>
-              
-              <h1 style={{
-                fontSize: 'clamp(32px, 5vw, 48px)',
-                fontWeight: '300',
-                margin: '0 0 16px 0',
-                lineHeight: '1.2',
-                letterSpacing: '-0.02em',
-              }}>
-                The Five Principles of<br />
-                <span style={{ fontWeight: '600' }}>Intentional Online Learning</span>
-              </h1>
-              
-              <p style={{
-                fontSize: '18px',
-                color: 'rgba(253,252,251,0.7)',
-                maxWidth: '600px',
-                lineHeight: '1.6',
-                margin: 0,
-              }}>
-                Transform your online course from a content repository into a genuine learning experience. Explore each principle, audit your course design, and track your progress.
-              </p>
-
-              {/* Mode Toggle */}
-              <div style={{
-                marginTop: '32px',
-                display: 'flex',
-                gap: '12px',
-                flexWrap: 'wrap',
-              }}>
-                <button
-                  className="mode-btn"
-                  onClick={() => setViewMode('explore')}
-                  style={{
-                    padding: '12px 24px',
-                    background: viewMode === 'explore' ? '#FDFCFB' : 'transparent',
-                    color: viewMode === 'explore' ? '#1A1A1A' : 'rgba(253,252,251,0.7)',
-                    border: '1px solid rgba(253,252,251,0.3)',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    fontSize: '14px',
-                    fontWeight: '500',
-                  }}
-                >
-                  Explore Principles
-                </button>
-                <button
-                  className="mode-btn"
-                  onClick={() => setViewMode('audit')}
-                  style={{
-                    padding: '12px 24px',
-                    background: viewMode === 'audit' ? '#FDFCFB' : 'transparent',
-                    color: viewMode === 'audit' ? '#1A1A1A' : 'rgba(253,252,251,0.7)',
-                    border: '1px solid rgba(253,252,251,0.3)',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    fontSize: '14px',
-                    fontWeight: '500',
-                  }}
-                >
-                  Audit My Course
-                </button>
-              </div>
-            </div>
-          </header>
-
-          {/* Main Content */}
-          <main style={{ maxWidth: '900px', margin: '0 auto', padding: '48px 32px' }}>
-            
-            {/* Audit Mode Progress Bar */}
-            {viewMode === 'audit' && (
-              <div style={{
-                background: '#fff',
-                border: '1px solid #E5E2DE',
-                borderRadius: '12px',
-                padding: '24px',
-                marginBottom: '32px',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
-              }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '16px' }}>
-                  <div>
-                    <h3 style={{ margin: '0 0 4px 0', fontSize: '16px', fontWeight: '600' }}>
-                      Course Audit Progress
-                    </h3>
-                    <p style={{ margin: 0, fontSize: '14px', color: '#666' }}>
-                      {getTotalProgress().checked} of {getTotalProgress().total} criteria checked
-                    </p>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                    <span style={{
-                      fontFamily: '"JetBrains Mono", monospace',
-                      fontSize: '24px',
-                      fontWeight: '500',
-                      color: getTotalProgress().percentage === 100 ? '#2D5A4A' : '#1A1A1A',
-                    }}>
-                      {getTotalProgress().percentage}%
-                    </span>
-                    <button
-                      onClick={resetProgress}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '6px',
-                        padding: '8px 12px',
-                        background: 'transparent',
-                        border: '1px solid #E5E2DE',
-                        borderRadius: '6px',
-                        cursor: 'pointer',
-                        fontSize: '13px',
-                        color: '#666',
-                      }}
-                    >
-                      <Icon name="RotateCcw" size={14} /> Reset
-                    </button>
-                  </div>
-                </div>
-                <div style={{
-                  height: '8px',
-                  background: '#F5F3F0',
-                  borderRadius: '4px',
-                  overflow: 'hidden',
-                }}>
-                  <div
-                    className="progress-fill"
-                    style={{
-                      height: '100%',
-                      width: `${getTotalProgress().percentage}%`,
-                      background: 'linear-gradient(90deg, #2D5A4A 0%, #4A7A6A 100%)',
-                      borderRadius: '4px',
-                    }}
-                  />
-                </div>
-              </div>
-            )}
-
-            {/* Principles List */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {principles.map((principle, index) => {
-                const isActive = activePrinciple === principle.id;
-                const progress = getProgress(principle.id);
-                
-                return (
-                  <div
-                    key={principle.id}
-                    className="principle-card"
-                    style={{
-                      background: isActive ? principle.lightColor : '#fff',
-                      border: `1px solid ${isActive ? principle.color : '#E5E2DE'}`,
-                      borderRadius: '12px',
-                      overflow: 'hidden',
-                      boxShadow: isActive 
-                        ? `0 4px 20px ${principle.color}20` 
-                        : '0 2px 8px rgba(0,0,0,0.04)',
-                    }}
-                  >
-                    {/* Principle Header */}
-                    <button
-                      onClick={() => setActivePrinciple(isActive ? null : principle.id)}
-                      style={{
-                        width: '100%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '16px',
-                        padding: '24px',
-                        background: 'transparent',
-                        border: 'none',
-                        cursor: 'pointer',
-                        textAlign: 'left',
-                      }}
-                    >
-                      <div style={{
-                        width: '48px',
-                        height: '48px',
-                        borderRadius: '12px',
-                        background: principle.color,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flexShrink: 0,
-                      }}>
-                        <Icon name={principle.icon} size={24} color="#fff" />
-                      </div>
-                      
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{
-                          fontFamily: '"JetBrains Mono", monospace',
-                          fontSize: '11px',
-                          color: principle.color,
-                          marginBottom: '4px',
-                        }}>
-                          Principle {index + 1}
-                        </div>
-                        <h3 style={{
-                          margin: '0 0 4px 0',
-                          fontSize: '18px',
-                          fontWeight: '600',
-                          color: '#1A1A1A',
-                        }}>
-                          {principle.title}
-                        </h3>
-                        <p style={{
-                          margin: 0,
-                          fontSize: '14px',
-                          color: '#666',
-                        }}>
-                          {principle.subtitle}
-                        </p>
-                      </div>
-
-                      {viewMode === 'audit' && (
-                        <div style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '8px',
-                          padding: '6px 12px',
-                          background: progress.percentage === 100 ? '#2D5A4A' : '#F5F3F0',
-                          borderRadius: '20px',
-                          flexShrink: 0,
-                        }}>
-                          <span style={{
-                            fontFamily: '"JetBrains Mono", monospace',
-                            fontSize: '12px',
-                            fontWeight: '500',
-                            color: progress.percentage === 100 ? '#fff' : '#1A1A1A',
-                          }}>
-                            {progress.checked}/{progress.total}
-                          </span>
-                        </div>
-                      )}
-
-                      <Icon
-                        name="ChevronRight"
-                        size={20}
-                        color="#999"
-                      />
-                    </button>
-
-                    {/* Expanded Content */}
-                    {isActive && (
-                      <div style={{ padding: '0 24px 24px' }}>
-                        <p style={{
-                          fontSize: '16px',
-                          lineHeight: '1.7',
-                          color: '#444',
-                          margin: '0 0 24px 0',
-                          paddingLeft: '64px',
-                        }}>
-                          {principle.description}
-                        </p>
-
-                        {/* Why This Matters */}
-                        <div
-                          className="section-toggle"
-                          style={{
-                            background: '#fff',
-                            borderRadius: '8px',
-                            marginBottom: '12px',
-                            overflow: 'hidden',
-                          }}
-                        >
-                          <button
-                            onClick={() => toggleSection(`${principle.id}-why`)}
-                            style={{
-                              width: '100%',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'space-between',
-                              padding: '16px 20px',
-                              background: 'transparent',
-                              border: 'none',
-                              cursor: 'pointer',
-                            }}
-                          >
-                            <span style={{ fontWeight: '600', fontSize: '15px' }}>
-                              Why This Matters
-                            </span>
-                            <Icon name="ChevronRight" size={18} color="#999" />
-                          </button>
-                          {expandedSections[`${principle.id}-why`] && (
-                            <div style={{ padding: '0 20px 16px' }}>
-                              <p style={{ margin: 0, lineHeight: '1.7', color: '#555' }}>
-                                {principle.expandedContent.why}
-                              </p>
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Key Principles */}
-                        <div
-                          className="section-toggle"
-                          style={{
-                            background: '#fff',
-                            borderRadius: '8px',
-                            marginBottom: '12px',
-                            overflow: 'hidden',
-                          }}
-                        >
-                          <button
-                            onClick={() => toggleSection(`${principle.id}-principles`)}
-                            style={{
-                              width: '100%',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'space-between',
-                              padding: '16px 20px',
-                              background: 'transparent',
-                              border: 'none',
-                              cursor: 'pointer',
-                            }}
-                          >
-                            <span style={{ fontWeight: '600', fontSize: '15px' }}>
-                              Key Practices
-                            </span>
-                            <Icon name="ChevronRight" size={18} color="#999" />
-                          </button>
-                          {expandedSections[`${principle.id}-principles`] && (
-                            <div style={{ padding: '0 20px 16px' }}>
-                              <ul style={{ margin: 0, paddingLeft: '20px', lineHeight: '1.8' }}>
-                                {principle.expandedContent.principles.map((item, i) => (
-                                  <li key={i} style={{ color: '#555', marginBottom: '8px' }}>
-                                    {item}
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Design Checklist */}
-                        <div
-                          style={{
-                            background: '#fff',
-                            borderRadius: '8px',
-                            marginBottom: '12px',
-                            overflow: 'hidden',
-                            border: viewMode === 'audit' ? `2px solid ${principle.color}40` : 'none',
-                          }}
-                        >
-                          <div style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            padding: '16px 20px',
-                            borderBottom: '1px solid #F0EEEB',
-                          }}>
-                            <span style={{ fontWeight: '600', fontSize: '15px' }}>
-                              Design Checklist
-                            </span>
-                            {viewMode === 'audit' && (
-                              <span style={{
-                                fontFamily: '"JetBrains Mono", monospace',
-                                fontSize: '12px',
-                                color: principle.color,
-                              }}>
-                                {progress.checked} of {progress.total} complete
-                              </span>
-                            )}
-                          </div>
-                          <div style={{ padding: '8px 0' }}>
-                            {principle.expandedContent.checklist.map((item, i) => {
-                              const isChecked = checkedItems[`${principle.id}-${i}`];
-                              return (
-                                <button
-                                  key={i}
-                                  className="check-item"
-                                  onClick={() => viewMode === 'audit' && toggleCheck(principle.id, i)}
-                                  style={{
-                                    width: '100%',
-                                    display: 'flex',
-                                    alignItems: 'flex-start',
-                                    gap: '12px',
-                                    padding: '12px 20px',
-                                    background: 'transparent',
-                                    border: 'none',
-                                    cursor: viewMode === 'audit' ? 'pointer' : 'default',
-                                    textAlign: 'left',
-                                  }}
-                                >
-                                  <div style={{
-                                    width: '22px',
-                                    height: '22px',
-                                    borderRadius: '6px',
-                                    border: isChecked ? 'none' : '2px solid #D0CCC6',
-                                    background: isChecked ? principle.color : 'transparent',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    flexShrink: 0,
-                                    marginTop: '1px',
-                                    transition: 'all 0.15s ease',
-                                  }}>
-                                    {isChecked && <Icon name="Check" size={14} color="#fff" strokeWidth={3} />}
-                                  </div>
-                                  <span style={{
-                                    fontSize: '14px',
-                                    lineHeight: '1.5',
-                                    color: isChecked ? '#888' : '#444',
-                                    textDecoration: isChecked ? 'line-through' : 'none',
-                                  }}>
-                                    {item}
-                                  </span>
-                                </button>
-                              );
-                            })}
-                          </div>
-                        </div>
-
-                        {/* Reflection Questions */}
-                        <div
-                          className="section-toggle"
-                          style={{
-                            background: '#fff',
-                            borderRadius: '8px',
-                            overflow: 'hidden',
-                          }}
-                        >
-                          <button
-                            onClick={() => toggleSection(`${principle.id}-questions`)}
-                            style={{
-                              width: '100%',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'space-between',
-                              padding: '16px 20px',
-                              background: 'transparent',
-                              border: 'none',
-                              cursor: 'pointer',
-                            }}
-                          >
-                            <span style={{ fontWeight: '600', fontSize: '15px' }}>
-                              Reflection Questions
-                            </span>
-                            <Icon name="ChevronRight" size={18} color="#999" />
-                          </button>
-                          {expandedSections[`${principle.id}-questions`] && (
-                            <div style={{ padding: '0 20px 16px' }}>
-                              {principle.expandedContent.questions.map((q, i) => (
-                                <div
-                                  key={i}
-                                  style={{
-                                    display: 'flex',
-                                    gap: '12px',
-                                    padding: '12px 0',
-                                    borderBottom: i < principle.expandedContent.questions.length - 1 ? '1px solid #F0EEEB' : 'none',
-                                  }}
-                                >
-                                  <span style={{
-                                    color: principle.color,
-                                    fontWeight: '600',
-                                    fontSize: '14px',
-                                  }}>
-                                    Q{i + 1}
-                                  </span>
-                                  <span style={{
-                                    fontSize: '14px',
-                                    lineHeight: '1.6',
-                                    color: '#444',
-                                    fontStyle: 'italic',
-                                  }}>
-                                    {q}
-                                  </span>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Footer */}
-            <footer style={{
-              marginTop: '64px',
-              padding: '32px',
-              background: '#1A1A1A',
-              borderRadius: '12px',
-              color: '#FDFCFB',
-              textAlign: 'center',
-            }}>
-              <p style={{
-                margin: '0 0 8px 0',
-                fontSize: '14px',
-                opacity: 0.7,
-              }}>
-                Based on evidence-based instructional design principles
-              </p>
-              <p style={{
-                margin: 0,
-                fontSize: '12px',
-                opacity: 0.5,
-                fontFamily: '"JetBrains Mono", monospace',
-              }}>
-                Your progress is saved automatically in your browser
-              </p>
-            </footer>
-          </main>
-        </div>
-      );
+      } catch (e) {}
     }
 
-    // Render the app
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<CourseDesignToolkit />);
+    function updateProgress() {
+      const total = principlesData.reduce((sum, p) => sum + p.checklist.length, 0);
+      const checked = Object.values(checkedItems).filter(Boolean).length;
+      const percent = Math.round((checked / total) * 100);
+      
+      document.getElementById('checkedCount').textContent = checked;
+      document.getElementById('totalCount').textContent = total;
+      document.getElementById('progressPercent').textContent = percent + '%';
+      document.getElementById('progressFill').style.width = percent + '%';
+      
+      // Update individual principle progress
+      principlesData.forEach((p, i) => {
+        const pChecked = p.checklist.filter((_, ci) => checkedItems[p.id + '-' + ci]).length;
+        const pTotal = p.checklist.length;
+        const progEl = document.querySelector(`[data-principle="${p.id}"] .principle-progress`);
+        if (progEl) {
+          progEl.textContent = pChecked + '/' + pTotal;
+          progEl.classList.toggle('complete', pChecked === pTotal);
+        }
+        const countEl = document.querySelector(`[data-principle="${p.id}"] .checklist-count`);
+        if (countEl) {
+          countEl.textContent = pChecked + ' of ' + pTotal + ' complete';
+          countEl.style.color = p.color;
+        }
+      });
+    }
+
+    function renderPrinciples() {
+      const container = document.getElementById('principles');
+      container.innerHTML = principlesData.map((p, i) => `
+        <div class="principle-card" data-principle="${p.id}" style="--principle-color: ${p.color}; --principle-light: ${p.lightColor}; --principle-color-light: ${p.color}40;">
+          <button class="principle-header">
+            <div class="principle-icon" style="background: ${p.color}">
+              <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">${p.icon}</svg>
+            </div>
+            <div class="principle-info">
+              <div class="principle-num" style="color: ${p.color}">Principle ${i + 1}</div>
+              <h3 class="principle-title">${p.title}</h3>
+              <p class="principle-subtitle">${p.subtitle}</p>
+            </div>
+            <div class="principle-progress">0/${p.checklist.length}</div>
+            <svg class="chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+          <div class="principle-content">
+            <p class="principle-desc">${p.description}</p>
+            
+            <div class="section" data-section="${p.id}-why">
+              <button class="section-header">
+                <span>Why This Matters</span>
+                <svg class="chevron-small" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
+              <div class="section-content">
+                <p>${p.why}</p>
+              </div>
+            </div>
+            
+            <div class="section" data-section="${p.id}-practices">
+              <button class="section-header">
+                <span>Key Practices</span>
+                <svg class="chevron-small" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
+              <div class="section-content">
+                <ul>${p.practices.map(pr => `<li>${pr}</li>`).join('')}</ul>
+              </div>
+            </div>
+            
+            <div class="checklist-section">
+              <div class="checklist-header">
+                <span>Design Checklist</span>
+                <span class="checklist-count" style="color: ${p.color}">0 of ${p.checklist.length} complete</span>
+              </div>
+              <div class="checklist-items">
+                ${p.checklist.map((item, ci) => `
+                  <button class="check-item ${checkedItems[p.id + '-' + ci] ? 'checked' : ''}" data-check="${p.id}-${ci}">
+                    <div class="check-box">
+                      <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                    </div>
+                    <span>${item}</span>
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+            
+            <div class="section" data-section="${p.id}-questions">
+              <button class="section-header">
+                <span>Reflection Questions</span>
+                <svg class="chevron-small" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
+              <div class="section-content">
+                ${p.questions.map((q, qi) => `
+                  <div class="question">
+                    <span class="question-num" style="color: ${p.color}">Q${qi + 1}</span>
+                    <span class="question-text">${q}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+      
+      // Add event listeners
+      document.querySelectorAll('.principle-header').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const card = btn.closest('.principle-card');
+          const id = card.dataset.principle;
+          document.querySelectorAll('.principle-card').forEach(c => {
+            if (c !== card) c.classList.remove('active');
+          });
+          card.classList.toggle('active');
+        });
+      });
+      
+      document.querySelectorAll('.section-header').forEach(btn => {
+        btn.addEventListener('click', () => {
+          btn.closest('.section').classList.toggle('open');
+        });
+      });
+      
+      document.querySelectorAll('.check-item').forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (currentMode !== 'audit') return;
+          const key = btn.dataset.check;
+          checkedItems[key] = !checkedItems[key];
+          btn.classList.toggle('checked', checkedItems[key]);
+          saveProgress();
+          updateProgress();
+        });
+      });
+      
+      updateProgress();
+    }
+
+    // Mode switching
+    document.querySelectorAll('.mode-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentMode = btn.dataset.mode;
+        document.body.classList.toggle('audit-mode', currentMode === 'audit');
+        document.getElementById('progressBox').classList.toggle('visible', currentMode === 'audit');
+      });
+    });
+
+    // Reset button
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
+        checkedItems = {};
+        saveProgress();
+        document.querySelectorAll('.check-item').forEach(btn => btn.classList.remove('checked'));
+        updateProgress();
+      }
+    });
+
+    // Initialize
+    renderPrinciples();
   </script>
 </body>
 </html>
